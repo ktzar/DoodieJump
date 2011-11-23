@@ -142,6 +142,7 @@ class Platform(pygame.sprite.Sprite):
         self.rect.top = position.top
         self.rect.left = position.left
         self.new_top = position.top
+        self.already_bounced = False
     def update(self):
         if self.new_top > self.rect.top :
             self.rect.top += 1

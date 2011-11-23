@@ -2,6 +2,7 @@ import os, pygame, time
 import random
 from pygame.locals import *
 from sprites import *
+from level import *
 import utils
 
 class Stage():
@@ -28,6 +29,8 @@ class Stage():
         #Display The Background
         self.screen.blit(self.background, (0, 0))
         pygame.display.flip()
+
+        self.level = Level()
 
         self.platforms          = pygame.sprite.Group()
         self.flying_scores      = pygame.sprite.Group()
@@ -98,15 +101,24 @@ class Stage():
 
         #Check if the playr has bounced in any platform
         collisions = pygame.sprite.spritecollide(self.player, self.platforms, False)
+        bounced = False
         for platform in collisions:
             if platform.rect.top > self.player.rect.top+self.player.rect.height-20 and\
                 platform.rect.left < self.player.rect.left + self.player.rect.width /2 and\
                 platform.rect.left + platform.rect.width > self.player.rect.left + self.player.rect.width/2:
                 self.player.bounce()
-                move_platforms = self.player.rect.top + self.player.rect.height + 40 #-40 is the gap
-                for platform in self.platforms:
-                    platform.move_down(move_platforms)
+                if platform.already_bounced == False:
+                    bounced = True
+                    move_platforms = self.player.rect.top + self.player.rect.height + 40 #-40 is the gap
+                    platform.already_bounced = True
+                    for platform in self.platforms:
+                        platform.move_down(move_platforms)
                 break
+        #If the player has bounced, create a new random platform in the top of the screen
+        if bounced:
+            new_platform = Platform(pygame.Rect(random.randint(0,400), -30, 10, 10))
+            new_platform.move_down(random.randint(40,80))
+            self.platforms.add(new_platform)
 
         #draw the level
         self.hud.update()
