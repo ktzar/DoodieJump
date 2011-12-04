@@ -27,14 +27,12 @@ class Level():
                 else:
                     row.append(0)
             self.data.append(row)
-        print self.data
 
 #return the enemies in the current scroll position (self.scrolled + self.ratio).
 #only return enemies if self.scrolled%self.ratio == 0 (each pixel in the stage is one enemy, not self.ratio
     def platforms(self):
         platforms   = []
         for x in range(self.rect.width-1):
-            print "Checking {0},{1}".format(self.scroll,x)
             if self.data[self.scroll][x] == 1:
                 platforms.append(x)
         return platforms

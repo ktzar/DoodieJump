@@ -42,7 +42,7 @@ class Stage():
         for i in range(0,640,20):
             self.platforms.add(Platform(pygame.Rect(i, 600,10,10)))
 
-        #Load the platforms in the game
+        #Load the platforms in the level
         for i in range(len(self.level.data)-1):
             self.level.scroll += 1
             platforms = self.level.platforms()
