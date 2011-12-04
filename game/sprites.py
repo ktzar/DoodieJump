@@ -11,7 +11,7 @@ class Flying_Score(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         font        = utils.load_font('chitown.ttf', 20)
         score       = '{0}'.format(score)
-        surf_text   = font.render(score, 2, (255,255,255))
+        surf_text   = font.render(score, 2, (10,10,10))
         self.rect   = position
         self.image  = pygame.Surface(font.size(score))
         #Blitting into a new Surface is needed to apply alpha, doesn't work in the surface from font.render
@@ -38,10 +38,10 @@ class Score_Meter(pygame.sprite.Sprite):
 
     def reload_image(self):
         score_text = 'Score: {0}'.format((self.score))
-        text = self.font.render(score_text, 1, (0, 0, 0))
+        text = self.font.render(score_text, 1, (255, 0, 0))
         text_shadow = self.font.render(score_text, 1, (255,255,255))
         self.image = pygame.Surface(self.font.size(score_text))
-        self.image.blit(text_shadow, (0,0))
+        self.image.blit(text_shadow, (2,2))
         self.image.blit(text, (0,0))
         self.image.set_colorkey((0,0,0))
 
@@ -63,16 +63,17 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, stage):
         self.stage = stage
-        self.jump_age = 0
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = utils.load_image('player.png')
-        self.rect.top = 500
+        self.jump_age       = 0
+        self.rect.top       = 500
+        self.x_acc          = 0
+        self.jump_frames    = 75
+        self.jump_height    = 150
+        self.state          = Player.JUMPING
+        self.moving         = False
         self.y_reference = self.rect.top
-        self.moving = False
-        self.x_acc = 0
-        self.jump_frames = 50
-        self.jump_height = 150
-        self.state = Player.JUMPING
+
         def jump(x):
             x = 3.14 / self.jump_frames * x
             temp = self.jump_height*math.fabs(math.sin(x))

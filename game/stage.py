@@ -33,23 +33,21 @@ class Stage():
         self.level = Level()
 
         self.platforms          = pygame.sprite.Group()
-        self.flying_scores      = pygame.sprite.Group()
         self.sprites            = pygame.sprite.Group()
         self.hud                = pygame.sprite.Group()
 
-        #bottom platforms
-        #TODO, remove eventually, they should be in the level data
-        for i in range(0,640,20):
-            self.platforms.add(Platform(pygame.Rect(i, 600,10,10)))
-
+        first_platform_x = False
         #Load the platforms in the level
         for i in range(len(self.level.data)-1):
             self.level.scroll += 1
             platforms = self.level.platforms()
             for platform in platforms:
+                if first_platform_x == False:
+                    first_platform_x = platform * self.level.ratio
                 self.platforms.add(Platform(pygame.Rect(platform*self.level.ratio, 640 - self.level.scroll * self.level.y_ratio,10,10)))
 
         self.player = Player(self)
+        self.player.rect.left = first_platform_x
         self.sprites.add(self.player)
 
         #game variables
@@ -110,12 +108,16 @@ class Stage():
         collisions = pygame.sprite.spritecollide(self.player, self.platforms, False)
         bounced = False
         for platform in collisions:
+            #Check that the player is in the proper position to do the bounce
             if platform.rect.top > self.player.rect.top+self.player.rect.height-20 and\
                 platform.rect.left < self.player.rect.left + self.player.rect.width /2 and\
-                platform.rect.left + platform.rect.width > self.player.rect.left + self.player.rect.width/2:
+                platform.rect.left + platform.rect.width > self.player.rect.left and\
+                platform.rect.top > 0: #don't bounce on not visible platforms
                 self.player.bounce()
                 if platform.already_bounced == False:
                     bounced = True
+                    self.hud.add(Flying_Score(self.player.rect, 1000))
+                    self.score.add_score(1000)
                     move_platforms = self.player.rect.top + self.player.rect.height + 40 #-40 is the gap
                     platform.already_bounced = True
                     for platform in self.platforms:
@@ -126,7 +128,6 @@ class Stage():
         self.hud.update()
         self.sprites.update()
         self.platforms.update()
-        self.flying_scores.update()
 
         if self.game_finished == True:
             gameover_text = self.font.render("Game Over", 2, (255, 255, 255))
@@ -137,7 +138,6 @@ class Stage():
             self.hud.draw(self.screen)
             self.sprites.draw(self.screen)
             self.platforms.draw(self.screen)
-            self.flying_scores.draw(self.screen)
 
         #draw all the groups of sprites
         pygame.display.flip()
