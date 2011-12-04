@@ -37,10 +37,17 @@ class Stage():
         self.sprites            = pygame.sprite.Group()
         self.hud                = pygame.sprite.Group()
 
+        #bottom platforms
+        #TODO, remove eventually, they should be in the level data
         for i in range(0,640,20):
             self.platforms.add(Platform(pygame.Rect(i, 600,10,10)))
-        for i in range(15):
-            self.platforms.add(Platform(pygame.Rect(random.randint(0,480), random.randint(0,640),10,10)))
+
+        #Load the platforms in the game
+        for i in range(len(self.level.data)-1):
+            self.level.scroll += 1
+            platforms = self.level.platforms()
+            for platform in platforms:
+                self.platforms.add(Platform(pygame.Rect(platform*self.level.ratio, 640 - self.level.scroll * self.level.y_ratio,10,10)))
 
         self.player = Player(self)
         self.sprites.add(self.player)
@@ -114,11 +121,6 @@ class Stage():
                     for platform in self.platforms:
                         platform.move_down(move_platforms)
                 break
-        #If the player has bounced, create a new random platform in the top of the screen
-        if bounced:
-            new_platform = Platform(pygame.Rect(random.randint(0,400), -30, 10, 10))
-            new_platform.move_down(random.randint(40,80))
-            self.platforms.add(new_platform)
 
         #draw the level
         self.hud.update()
@@ -142,7 +144,3 @@ class Stage():
         return False
 
     #Game Over
-
-
-
-
