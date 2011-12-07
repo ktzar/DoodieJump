@@ -12,7 +12,7 @@ class Flying_Score(pygame.sprite.Sprite):
         font        = utils.load_font('chitown.ttf', 20)
         score       = '{0}'.format(score)
         surf_text   = font.render(score, 2, (10,10,10))
-        self.rect   = position
+        self.rect   = position.copy()
         self.image  = pygame.Surface(font.size(score))
         #Blitting into a new Surface is needed to apply alpha, doesn't work in the surface from font.render
         self.image.blit(surf_text, (0,0))
@@ -24,23 +24,28 @@ class Flying_Score(pygame.sprite.Sprite):
         self.image.set_alpha (new_alpha)
         self.age += 1
         self.rect.top -= self.age/4 + random.randint(1,2)
+        self.rect.left -= 10*math.sin(self.age/4)
         if self.age > 25:
             self.kill()
 
 class Score_Meter(pygame.sprite.Sprite):
+
+    font = False
+
     def __init__(self, position):
+        if Score_Meter.font == False:
+            Score_Meter.font = utils.load_font('chitown.ttf', 36)
         pygame.sprite.Sprite.__init__(self)
         self.score = 0
         self.target_score = 0
         self.rect = position
-        self.font = utils.load_font('chitown.ttf', 36)
         self.reload_image()
 
     def reload_image(self):
         score_text = 'Score: {0}'.format((self.score))
-        text = self.font.render(score_text, 1, (255, 0, 0))
-        text_shadow = self.font.render(score_text, 1, (255,255,255))
-        self.image = pygame.Surface(self.font.size(score_text))
+        text = Score_Meter.font.render(score_text, 1, (255, 0, 0))
+        text_shadow = Score_Meter.font.render(score_text, 1, (255,255,255))
+        self.image = pygame.Surface(Score_Meter.font.size(score_text))
         self.image.blit(text_shadow, (2,2))
         self.image.blit(text, (0,0))
         self.image.set_colorkey((0,0,0))
@@ -93,7 +98,7 @@ class Player(pygame.sprite.Sprite):
 
     def bounce(self):
         if self.jump_age > self.jump_frames / 2:
-            print "Bounce"
+            #print "Bounce"
             self.y_reference = self.rect.top
             self.jump_age = 0
             self.state = Player.JUMPING
@@ -121,7 +126,7 @@ class Player(pygame.sprite.Sprite):
         #End of jump
         #print "{0}/{1}".format(self.jump_age, self.jump_frames)
         if self.jump_age == self.jump_frames - 1:
-            print "Falling"
+            #print "Falling"
             self.state = Player.FALLING
             self.y_reference += 15
             pass

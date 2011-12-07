@@ -10,27 +10,27 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.'''
-import pygame
-from pygame.locals import *
-import utils
-import math
-import pickle
-import highscore
-from highscore import *
+import  pygame
+from    pygame.locals import *
+import  utils
+import  math
+import  pickle
+import  highscore
+from    highscore import *
 
 class Abstract_Menu():
     def __init__(self, screen):
         self.font = utils.load_font('chitown.ttf', 24)
         self.background, foo    = utils.load_image('background.png')
         self.logo, foo          = utils.load_image('logo.png')
-        self.screen = screen
-        self.chosen_option = 0
-        self.age = 0
-        self.selected_option = -1
-        self.events = [] #So the subclasses can inspect input events
-        self.finished = False
-        self.line_height = 60
-        self.left_margin = 152
+        self.screen             = screen
+        self.chosen_option      = 0
+        self.age                = 0
+        self.selected_option    = -1
+        self.events             = [] #So the subclasses can inspect input events
+        self.finished           = False
+        self.line_height        = 60
+        self.left_margin        = 152
 
     def handle_keys(self):
         #Handle Input Events

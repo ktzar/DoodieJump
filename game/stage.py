@@ -10,6 +10,7 @@ class Stage():
         self.screen = screen
         self.initialise()
         self.debug = False
+        self.finished = False
 
     def player_dies(self):
         self.game_finished = True
@@ -70,6 +71,8 @@ class Stage():
             elif event.type == KEYDOWN:
                 if self.game_finished == False:
                     self.game_started = True
+                if self.game_finished == True:
+                    self.finished = True
                 if event.key == K_ESCAPE:
                     self.game_finished = True
                 elif event.key == K_RIGHT:

@@ -19,15 +19,23 @@ def DoodieJump():
 
     stage   = Stage(screen)
     menu    = Menu(screen)
+    options = Options(screen)
     about   = About(screen)
     clock = pygame.time.Clock()
 
     while 1:
-        clock.tick(100)
+        clock.tick(50)
         if menu.selected_option == -1:
             menu.loop()
+        elif menu.selected_option == 1:
+            options.loop()
+            if options.finished == True:
+                menu = Menu(screen)
         elif menu.selected_option == 0:
             stage.loop()
+            if stage.finished == True:
+                menu = Menu(screen)
+                stage = Stage(screen)
         elif menu.selected_option == 3:
             about.loop()
             if about.finished == True:
