@@ -1,9 +1,9 @@
 import os, pygame, time
 import random
 from pygame.locals import *
-from sprites import *
-from level import *
-import utils
+from .sprites import *
+from .level import *
+from . import utils
 
 class Stage():
     def __init__(self, screen):

@@ -1,6 +1,6 @@
 import os, pygame, time, random, math
 from pygame.locals import *
-import utils
+from . import utils
 #import pdb
 
 #Sprite that shows a number fading out, when faded dies
@@ -55,7 +55,7 @@ class Score_Meter(pygame.sprite.Sprite):
 
     def update(self):
         if self.target_score > self.score:
-            self.score += (self.target_score - self.score ) / 10 + random.randint(5,9)
+            self.score += int((self.target_score - self.score ) / 10) + random.randint(5,9)
             if self.score > self.target_score:
                 self.score = self.target_score
             self.reload_image()
@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
             x = 3.14 / self.jump_frames * x
             temp = self.jump_height*math.fabs(math.sin(x))
             return temp
-        self.y_positions = map(jump, range(0,self.jump_frames,1))
+        self.y_positions = list(map(jump, list(range(0,self.jump_frames,1))))
 
     def move_right(self):
         self.moving = True 
@@ -153,7 +153,7 @@ class Platform(pygame.sprite.Sprite):
         if self.new_top > self.rect.top :
             self.rect.top += 1
         if self.rect.top > 640:
-            print "kill"
+            print("kill")
             self.kill()
 
     def move_down(self, new_top):

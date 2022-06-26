@@ -1,6 +1,6 @@
 import random
 import pygame
-import utils
+from . import utils
 
 
 """Level"""
